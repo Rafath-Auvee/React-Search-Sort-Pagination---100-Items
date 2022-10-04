@@ -1,39 +1,115 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Row from "./Row";
-// import { Products } from "./../Product/Product.js";
+import { Products } from "./../Product/Product.js";
 import Pagination from "./../Pagination/Pagination";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 
 const Table = () => {
   const baseURL = "http://localhost:5000";
 
   const [query, setQuery] = useState("");
-  const [products, setProducts] = useState([]);
-  const [value, setValue] = useState([]);
+  const [products, setProducts] = useState(Products);
+  // const [value, setValue] = useState([]);
+  const [sorted, setSorted] = useState({ sorted: "id", reversed: false });
   const [item, setItem] = useState([]);
   let [choosen, setChoosen] = useState([]);
   const [sortValue, setSortValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(5);
 
-  const sortItem = ["AGE", "SPICY", "SALTY", "SWEET"];
+  const sortById = () => {
+    const usersCopy = [...products];
+    usersCopy.sort((userA, userB) => {
+      if (sorted.reversed) {
+        return userA.id - userB.id;
+      }
+      return userB.id - userA.id;
+    });
+    setProducts(usersCopy);
+    setSorted({ sorted: "id", reversed: !sorted.reversed });
+  };
+
+  const sortByName = () => {
+    const usersCopy = [...products];
+    usersCopy.sort((userA, userB) => {
+      const fullNameA = `${userA.name} `;
+      const fullNameB = `${userB.name}`;
+      if (sorted.reversed) {
+        return fullNameB.localeCompare(fullNameA);
+      }
+      return fullNameA.localeCompare(fullNameB);
+    });
+    setProducts(usersCopy);
+    // setQuery("")
+    setSorted({ sorted: "name", reversed: !sorted.reversed });
+  };
+
+  const renderArrow = () => {
+    if (sorted.reversed) {
+      return <FaArrowUp />;
+    }
+    return <FaArrowDown />;
+  };
 
   const lastPostIndex = currentPage * postsPerPage;
   const firstPostIndex = lastPostIndex - postsPerPage;
   const currentPosts = products.slice(firstPostIndex, lastPostIndex);
 
-  useEffect(() => {
-    fetch("dummy.json")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setProducts(data);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch("dummy.json")
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       // console.log(data);
+  //       setProducts(data);
+  //     });
+  // }, []);
 
-  const handleSort = () => {
+  const sortByAge = () => {
+    const usersCopy = [...products];
+    usersCopy.sort((userA, userB) => {
+      if (sorted.reversed) {
+        return userA.age - userB.age;
+      }
+      return userB.age - userA.age;
+    });
+    setProducts(usersCopy);
+    setSorted({ sorted: "age", reversed: !sorted.reversed });
+  };
 
-  }
+  const sortBySpicy = () => {
+    const usersCopy = [...products];
+    usersCopy.sort((userA, userB) => {
+      if (sorted.reversed) {
+        return userA.spicy - userB.spicy;
+      }
+      return userB.spicy - userA.spicy;
+    });
+    setProducts(usersCopy);
+    setSorted({ sorted: "spicy", reversed: !sorted.reversed });
+  };
+  const sortBySalty = () => {
+    const usersCopy = [...products];
+    usersCopy.sort((userA, userB) => {
+      if (sorted.reversed) {
+        return userA.salty - userB.salty;
+      }
+      return userB.salty - userA.salty;
+    });
+    setProducts(usersCopy);
+    setSorted({ sorted: "salty", reversed: !sorted.reversed });
+  };
+  const sortBySweet = () => {
+    const usersCopy = [...products];
+    usersCopy.sort((userA, userB) => {
+      if (sorted.reversed) {
+        return userA.sweet - userB.sweet;
+      }
+      return userB.sweet - userA.sweet;
+    });
+    setProducts(usersCopy);
+    setSorted({ sorted: "sweet", reversed: !sorted.reversed });
+  };
 
   return (
     <div className="container mx-auto my-7 px-5">
@@ -72,34 +148,51 @@ const Table = () => {
             />
           </div>
         </div>
-        <div className="ml-5">
-        <label className="label">
+        {/* <div className="ml-5">
+          <label className="label">
             <span className="label-text bg-blue-800 rounded px-5 text-white p-1">
               Sort
             </span>
           </label>
-          <select className="select select-primary w-full max-w-xs" onChange={handleSort} >
-            <option disabled selected>
-              Sorting Selection  
+          <select
+            className="select select-primary w-full max-w-xs"
+            onChange={handleSort}
+          >
+            <option disabled selected defaultValue="Sorting Selection">
+              Sorting Selection
             </option>
             {sortItem.map((item, index) => (
-              <option value={item}>{item}</option>
+              <option value={item} key={index}>
+                {item}
+              </option>
             ))}
           </select>
-        </div>
+        </div> */}
       </h1>
 
       <div className="overflow-x-auto">
         <table className={`table w-full `}>
           <thead>
             <tr className="bg-green-500">
-              <th>ID</th>
-              <th className="text-1xl">Name</th>
-              <th className="text-1xl">State</th>
-              <th className="text-1xl">Age</th>
-              <th className="text-1xl">Spicy</th>
-              <th className="text-1xl">Salty</th>
-              <th className="text-1xl">Sweet</th>
+              <th onClick={sortById}>
+                ID {sorted.sorted === "id" ? renderArrow() : null}
+              </th>
+              <th onClick={sortByName} className="text-1xl text-white bg-primary ">
+                Name {sorted.sorted === "name" ? renderArrow() : null}
+              </th>
+              <th className="text-1xl text-white bg-primary">State</th>
+              <th className="text-1xl text-white bg-primary" onClick={sortByAge}>
+                Age {sorted.sorted === "age" ? renderArrow() : null}
+              </th>
+              <th className="text-1xl text-white bg-primary" onClick={sortBySpicy}>
+                Spicy {sorted.sorted === "spicy" ? renderArrow() : null}
+              </th>
+              <th className="text-1xl text-white bg-primary" onClick={sortBySalty}>
+                Salty {sorted.sorted === "salty" ? renderArrow() : null}
+              </th>
+              <th className="text-1xl text-white bg-primary" onClick={sortBySweet}>
+                Sweet {sorted.sorted === "sweet" ? renderArrow() : null}
+              </th>
             </tr>
           </thead>
           <tbody>
