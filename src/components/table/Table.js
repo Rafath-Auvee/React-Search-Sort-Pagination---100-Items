@@ -2,14 +2,25 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Row from "./Row";
 // import { Products } from "./../Product/Product.js";
+import Pagination from "./../Pagination/Pagination";
 
 const Table = () => {
   const baseURL = "http://localhost:5000";
 
   const [query, setQuery] = useState("");
   const [products, setProducts] = useState([]);
+  const [value, setValue] = useState([]);
   const [item, setItem] = useState([]);
   let [choosen, setChoosen] = useState([]);
+  const [sortValue, setSortValue] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(5);
+
+  const sortItem = ["AGE", "SPICY", "SALTY", "SWEET"];
+
+  const lastPostIndex = currentPage * postsPerPage;
+  const firstPostIndex = lastPostIndex - postsPerPage;
+  const currentPosts = products.slice(firstPostIndex, lastPostIndex);
 
   useEffect(() => {
     fetch("dummy.json")
@@ -19,6 +30,10 @@ const Table = () => {
         setProducts(data);
       });
   }, []);
+
+  const handleSort = () => {
+
+  }
 
   return (
     <div className="container mx-auto my-7 px-5">
@@ -41,20 +56,36 @@ const Table = () => {
         </a>
       </h1>
 
-      <h1 className="text-center text-1xl mb-5">
+      <h1 className="text-center text-1xl mb-5 flex flex-row">
         <div className="form-control">
-        <label className="label">
-              <span className="label-text bg-blue-800 rounded px-5 text-white p-1">Search by ID</span>
+          <label className="label">
+            <span className="label-text bg-blue-800 rounded px-5 text-white p-1">
+              Search by ID
+            </span>
           </label>
           <div className="input-group">
-            
             <input
-              type="text"
+              type="number"
               placeholder="Search by ID"
-              className="input input-bordered border-2 border-black"
+              className="input input-bordered  border-3 border-black"
               onChange={(e) => setQuery(e.target.value)}
             />
           </div>
+        </div>
+        <div className="ml-5">
+        <label className="label">
+            <span className="label-text bg-blue-800 rounded px-5 text-white p-1">
+              Sort
+            </span>
+          </label>
+          <select className="select select-primary w-full max-w-xs" onChange={handleSort} >
+            <option disabled selected>
+              Sorting Selection  
+            </option>
+            {sortItem.map((item, index) => (
+              <option value={item}>{item}</option>
+            ))}
+          </select>
         </div>
       </h1>
 
@@ -74,7 +105,7 @@ const Table = () => {
           <tbody>
             {/* ({console.log(user)}) */}
             {query === ""
-              ? products.map((product, index) => (
+              ? currentPosts.map((product, index) => (
                   <tr key={index}>
                     <td className="no-underline">{product.id}</td>
                     <td className="no-underline">{product.name}</td>
@@ -87,7 +118,6 @@ const Table = () => {
                 ))
               : products
                   .filter((asd) =>
-                    // var resultObj = Products.find(v => v.id === 1);
                     asd.id.toString().toLowerCase().includes(query)
                   )
                   .map((product, index) => (
@@ -105,14 +135,14 @@ const Table = () => {
         </table>
       </div>
 
-      {/* {Products.filter((asd) => asd.name.toLowerCase().includes(query)).map(
-        (product, index) => (
-          <tr key={index}>
-            <tr>{product.id}</tr>
-            <tr>{product.name}</tr>
-          </tr>
-        )
-      )} */}
+      <div className="grid justify-items-center mt-[100px]">
+        <Pagination
+          totalPosts={products.length}
+          postsPerPage={postsPerPage}
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+        />
+      </div>
     </div>
   );
 };
