@@ -132,72 +132,139 @@ const Table = () => {
         </a>
       </h1>
 
-      <h1 className="text-center text-1xl mb-5 flex flex-row">
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text bg-blue-800 rounded px-5 text-white p-1">
-              Search by ID
-            </span>
-          </label>
-          <div className="input-group">
-            <input
-              type="number"
-              placeholder="Search by ID"
-              className="input input-bordered  border-3 border-black"
-              onChange={(e) => setQuery(e.target.value)}
-            />
-          </div>
-        </div>
-        {/* <div className="ml-5">
-          <label className="label">
-            <span className="label-text bg-blue-800 rounded px-5 text-white p-1">
-              Sort
-            </span>
-          </label>
-          <select
-            className="select select-primary w-full max-w-xs"
-            onChange={handleSort}
-          >
-            <option disabled selected defaultValue="Sorting Selection">
-              Sorting Selection
-            </option>
-            {sortItem.map((item, index) => (
-              <option value={item} key={index}>
-                {item}
-              </option>
-            ))}
-          </select>
-        </div> */}
+      <h1 className="text-center text-1xl mb-5">
+        <button className="text-white btn btn-lg btn-outline bg-green-500">
+          Click Name, Age, Spicy, Salty, Sweet for sorting Ascending Descending
+          order
+        </button>
       </h1>
 
-      <div className="overflow-x-auto">
-        <table className={`table w-full `}>
-          <thead>
-            <tr className="bg-green-500">
-              <th onClick={sortById}>
-                ID {sorted.sorted === "id" ? renderArrow() : null}
-              </th>
-              <th onClick={sortByName} className="text-1xl text-white bg-primary ">
-                Name {sorted.sorted === "name" ? renderArrow() : null}
-              </th>
-              <th className="text-1xl text-white bg-primary">State</th>
-              <th className="text-1xl text-white bg-primary" onClick={sortByAge}>
-                Age {sorted.sorted === "age" ? renderArrow() : null}
-              </th>
-              <th className="text-1xl text-white bg-primary" onClick={sortBySpicy}>
-                Spicy {sorted.sorted === "spicy" ? renderArrow() : null}
-              </th>
-              <th className="text-1xl text-white bg-primary" onClick={sortBySalty}>
-                Salty {sorted.sorted === "salty" ? renderArrow() : null}
-              </th>
-              <th className="text-1xl text-white bg-primary" onClick={sortBySweet}>
-                Sweet {sorted.sorted === "sweet" ? renderArrow() : null}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {/* ({console.log(user)}) */}
-            {query === ""
+      <div className="container flex flex-row ">
+        <div className="card w-96 bg-base-100 shadow-2xl">
+          <div className="card-body">
+            {(query === null || query === "" || query > Products.length || query < 1) ? (
+              <div>
+                <p className="no-underline card-title">ID: </p>
+                <p className="no-underline card-title">NAME: </p>
+                <p className="no-underline card-title">STATE: </p>
+                <p className="no-underline card-title">AGE: </p>
+                <p className="no-underline card-title">SPICY: </p>
+                <p className="no-underline card-title">SALTY: </p>
+                <p className="no-underline card-title">SWEET: </p>
+              </div>
+            ) : (
+              <div>
+                {
+                  products
+                    .filter((asd) =>
+                      asd.id.toString().toLowerCase().includes(query)
+                    )
+                    .map((product, index) => (
+                      <div key={index}>
+                        <p className="no-underline card-title">
+                          ID: {product.id}
+                        </p>
+                        <p className="no-underline card-title">
+                          NAME: {product.name}
+                        </p>
+                        <p className="no-underline card-title">
+                          STATE: {product.state}
+                        </p>
+                        <p className="no-underline card-title">
+                          AGE: {product.age}
+                        </p>
+                        <p className="no-underline card-title">
+                          SPICY: {product.spicy}
+                        </p>
+                        <p className="no-underline card-title">
+                          SALTY: {product.salty}
+                        </p>
+                        <p className="no-underline card-title">
+                          SWEET: {product.sweet}
+                        </p>
+                      </div>
+                    ))[0]
+                }
+              </div>
+            )}
+
+            <div className="card-actions">
+              <h1 className="text-center text-1xl mb-5 flex flex-row">
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text bg-blue-800 rounded px-5 text-white p-1">
+                      Search by ID
+                    </span>
+                  </label>
+                  <div className="input-group">
+                    <input
+                      type="number"
+                      placeholder="Search by ID"
+                      className="input input-bordered  border-3 border-black"
+                      onChange={(e) => setQuery(e.target.value)}
+                      min="0"
+                    />
+                  </div>
+                </div>
+              </h1>
+            </div>
+          </div>
+        </div>
+        <div className="overflow-x-auto flex-auto">
+          <table className={`table w-full `}>
+            <thead>
+              <tr className="bg-green-500 ">
+                <th onClick={sortById}>
+                  ID {sorted.sorted === "id" ? renderArrow() : null}
+                </th>
+                <th
+                  onClick={sortByName}
+                  className="text-1xl text-white bg-primary "
+                >
+                  Name {sorted.sorted === "name" ? renderArrow() : null}
+                </th>
+                <th className="text-1xl text-white bg-primary">State</th>
+                <th
+                  className="text-1xl text-white bg-primary"
+                  onClick={sortByAge}
+                >
+                  Age {sorted.sorted === "age" ? renderArrow() : null}
+                </th>
+                <th
+                  className="text-1xl text-white bg-primary"
+                  onClick={sortBySpicy}
+                >
+                  Spicy {sorted.sorted === "spicy" ? renderArrow() : null}
+                </th>
+                <th
+                  className="text-1xl text-white bg-primary"
+                  onClick={sortBySalty}
+                >
+                  Salty {sorted.sorted === "salty" ? renderArrow() : null}
+                </th>
+                <th
+                  className="text-1xl text-white bg-primary"
+                  onClick={sortBySweet}
+                >
+                  Sweet {sorted.sorted === "sweet" ? renderArrow() : null}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* ({console.log(user)}) */}
+
+              {currentPosts.map((product, index) => (
+                <tr key={index}>
+                  <td className="no-underline">{product.id}</td>
+                  <td className="no-underline">{product.name}</td>
+                  <td className="no-underline">{product.state}</td>
+                  <td className="no-underline">{product.age}</td>
+                  <td className="no-underline">{product.spicy}</td>
+                  <td className="no-underline">{product.salty}</td>
+                  <td className="no-underline">{product.sweet}</td>
+                </tr>
+              ))}
+              {/* {query === ""
               ? currentPosts.map((product, index) => (
                   <tr key={index}>
                     <td className="no-underline">{product.id}</td>
@@ -223,9 +290,10 @@ const Table = () => {
                       <td className="no-underline">{product.salty}</td>
                       <td className="no-underline">{product.sweet}</td>
                     </tr>
-                  ))[0]}
-          </tbody>
-        </table>
+                  ))[0]} */}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div className="grid justify-items-center mt-[100px]">
