@@ -10,13 +10,14 @@ const Table = () => {
 
   const [query, setQuery] = useState("");
   const [products, setProducts] = useState(Products);
+  const [find, setFind] = useState(Products);
   // const [value, setValue] = useState([]);
   const [sorted, setSorted] = useState({ sorted: "id", reversed: false });
   const [item, setItem] = useState([]);
   let [choosen, setChoosen] = useState([]);
   const [sortValue, setSortValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(5);
+  const [postsPerPage, setPostsPerPage] = useState(10);
 
   const sortById = () => {
     const usersCopy = [...products];
@@ -139,8 +140,8 @@ const Table = () => {
         </button>
       </h1>
 
-      <div className="container flex flex-row ">
-        <div className="card w-96 bg-base-100 shadow-2xl">
+      <div className="flex lg:flex-row flex-col m-3">
+        <div className="card flex-auto bg-base-100 ">
           <div className="card-body">
             {(query === null || query === "" || query > Products.length || query < 1) ? (
               <div>
@@ -155,7 +156,7 @@ const Table = () => {
             ) : (
               <div>
                 {
-                  products
+                  find
                     .filter((asd) =>
                       asd.id.toString().toLowerCase().includes(query)
                     )
@@ -200,7 +201,7 @@ const Table = () => {
                     <input
                       type="number"
                       placeholder="Search by ID"
-                      className="input input-bordered  border-3 border-black"
+                      className="input input-bordered w-2/3 border-3 border-black"
                       onChange={(e) => setQuery(e.target.value)}
                       min="0"
                     />
@@ -210,7 +211,7 @@ const Table = () => {
             </div>
           </div>
         </div>
-        <div className="overflow-x-auto flex-auto">
+        <div className="overflow-x-auto w-full flex-auto">
           <table className={`table w-full `}>
             <thead>
               <tr className="bg-green-500 ">
@@ -251,7 +252,7 @@ const Table = () => {
               </tr>
             </thead>
             <tbody>
-              {/* ({console.log(user)}) */}
+              
 
               {currentPosts.map((product, index) => (
                 <tr key={index}>
@@ -264,33 +265,7 @@ const Table = () => {
                   <td className="no-underline">{product.sweet}</td>
                 </tr>
               ))}
-              {/* {query === ""
-              ? currentPosts.map((product, index) => (
-                  <tr key={index}>
-                    <td className="no-underline">{product.id}</td>
-                    <td className="no-underline">{product.name}</td>
-                    <td className="no-underline">{product.state}</td>
-                    <td className="no-underline">{product.age}</td>
-                    <td className="no-underline">{product.spicy}</td>
-                    <td className="no-underline">{product.salty}</td>
-                    <td className="no-underline">{product.sweet}</td>
-                  </tr>
-                ))
-              : products
-                  .filter((asd) =>
-                    asd.id.toString().toLowerCase().includes(query)
-                  )
-                  .map((product, index) => (
-                    <tr key={index}>
-                      <td className="no-underline">{product.id}</td>
-                      <td className="no-underline">{product.name}</td>
-                      <td className="no-underline">{product.state}</td>
-                      <td className="no-underline">{product.age}</td>
-                      <td className="no-underline">{product.spicy}</td>
-                      <td className="no-underline">{product.salty}</td>
-                      <td className="no-underline">{product.sweet}</td>
-                    </tr>
-                  ))[0]} */}
+              
             </tbody>
           </table>
         </div>
